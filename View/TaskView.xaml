@@ -1,0 +1,97 @@
+﻿<Window x:Name="taskView" x:Class="WPFToDoList.View.TaskView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFToDoList.View"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="猫嘟清单" Height="600" Width="1000" FontFamily="Arial Black">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="250*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="300*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <WrapPanel Grid.Row="0" Grid.Column="0">
+            <Ellipse x:Name="tarvarPic" Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="/Resources/avatar3.jpeg" Stretch="Uniform"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <StackPanel>
+                <Label Content="当前用户"></Label>
+                <Label Content="星期三"></Label>
+                <Label Content="2024-6-12"></Label>
+            </StackPanel>
+            <Rectangle Width="60" Height="60">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="/Resources/weather1.jpeg" Stretch="Uniform"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </WrapPanel>
+        <WrapPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Calendar />
+        </WrapPanel>
+        <WrapPanel Grid.Row="2" Grid.Column="0" x:Name="wpl3">
+            <lvc:CartesianChart Margin="20" Series="{Binding SeriesCollection}" LegendLocation="Top"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Width="{Binding ElementName=wpl3, Path=ActualWidth}"
+                                Height="{Binding ElementName=wpl3, Path=ActualHeight}"/>
+        </WrapPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" 
+                    x:Name="sp1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button x:Name="btnAll" Height="50" Width="100" Margin="10">全部</Button>
+            <Button x:Name="btnLife" Height="50" Width="100" Margin="10">生活</Button>
+            <Button x:Name="btnWork" Height="50" Width="100" Margin="10">工作</Button>
+            <Button x:Name="btnUndefined" Height="50" Width="100" Margin="10">未定义</Button>
+            <Button x:Name="btnDone" Height="50" Width="100" Margin="10">已完成</Button>
+        </StackPanel>
+        <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical">
+            <ListView x:Name="lvTask">
+               <!-- <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="2" BorderBrush="Bisque">
+                            <StackPanel Orientation="Vertical" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <CheckBox ></CheckBox>
+                                <TextBlock Name="textBlok" TextWrapping="Wrap" Padding="0" LineHeight="0.1" FontSize="20"
+                                           Width="{Binding RelativeSource={RelativeSource Self},Path=FontSize}" Text="{Binding Name}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate> -->
+                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                    <CheckBox Width="30" IsChecked="False"/>
+                    <ListViewItem>第1条记录</ListViewItem>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                    <CheckBox Width="30" IsChecked="False"/>
+                    <ListViewItem>第2条记录</ListViewItem>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                    <CheckBox Width="30" IsChecked="False"/>
+                    <ListViewItem>第3条记录</ListViewItem>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                    <CheckBox Width="30" IsChecked="False"/>
+                    <ListViewItem>第4条记录</ListViewItem>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
+                    <CheckBox Width="30" IsChecked="False"/>
+                    <ListViewItem>第5条记录</ListViewItem>
+                </StackPanel>
+            </ListView>
+            <WrapPanel Margin="5">
+                <Button Content="新增" Width="80" Margin="5"></Button>
+                <DatePicker Text="日期" Width="80" Margin="5"></DatePicker>
+                <Label Content="标签" Margin="5"></Label>
+                <TextBlock Text="" Width="80"  Margin="5" Background="AliceBlue"></TextBlock>
+            </WrapPanel>
+        </WrapPanel>
+
+    </Grid>
+</Window>

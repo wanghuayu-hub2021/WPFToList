@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPFToDoList.ViewModel;
 
 namespace WPFToDoList.View
 {
@@ -22,6 +23,7 @@ namespace WPFToDoList.View
         public TaskView()
         {
             InitializeComponent();
+            this.DataContext = new TaskViewModel();
         }
     }
 }

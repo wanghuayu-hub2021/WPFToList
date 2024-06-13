@@ -9,11 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="View\avatar3.jpeg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
+    <None Remove="Resources\avatar1.jpeg" />
+    <None Remove="Resources\avatar2.jpeg" />
+    <None Remove="Resources\avatar3.jpeg" />
+    <None Remove="Resources\weather1.jpeg" />
+    <None Remove="Resources\weather2.jpg" />
+    <None Remove="Resources\weather3.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +24,39 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="View\avatar3.jpeg" />
+    <Resource Include="Resources\avatar1.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\avatar2.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\avatar3.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\weather1.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\weather2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\weather3.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="WpfResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WpfResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="WpfResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WpfResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

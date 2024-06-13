@@ -6,8 +6,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using WPFToDoList.Model;
 using WPFToDoList.Service;
+using System.Collections.ObjectModel;
+using LiveCharts.Wpf;
+
 
 namespace WPFToDoList.ViewModel
 {
@@ -16,6 +21,49 @@ namespace WPFToDoList.ViewModel
     /// </summary>
     public class TaskViewModel : BindableBase, INavigationAware
     {
+        private readonly DependencyObject _myDependencyObject;
+
+        public TaskViewModel()
+        {
+            _myDependencyObject = new DependencyObject();
+            LbNowTime=DateTime.Now;
+            SeriesCollection = new ObservableCollection<Series>();
+            InitializeChart();
+        }
+
+        public static readonly DependencyProperty LbNowTimeProperty =
+            DependencyProperty.Register("LbNowTime", typeof(DateTime), typeof(DependencyObject));
+
+        // 创建属性的公开访问器
+        public DateTime LbNowTime
+        {
+            get { return (DateTime)_myDependencyObject.GetValue(LbNowTimeProperty); }
+            set { _myDependencyObject.SetValue(LbNowTimeProperty, value); }
+        }
+
+        private ObservableCollection<Series> _seriesCollection;
+
+        public ObservableCollection<Series> SeriesCollection
+        {
+            get { return _seriesCollection; }
+            set
+            {
+                _seriesCollection = value;
+            }
+        }
+
+        private void InitializeChart()
+        {
+            // 创建数据序列示例
+            var series = new LineSeries
+            {
+                Title = "Sample Series"
+            };
+
+            // 添加到数据集合
+            SeriesCollection.Add(series);
+        }
+
         public TaskService taskService = new TaskService();
 
         public List<TaskModel> GetTaskData()

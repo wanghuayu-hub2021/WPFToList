@@ -3,10 +3,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPFToDoList.View"
+        xmlns:local="clr-namespace:WPFToDoList.ViewModel"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="猫嘟清单" Height="600" Width="1000" FontFamily="Arial Black">
+        Title="猫嘟清单" Height="600" Width="1000" 
+        Style="{DynamicResource MyWindowStyle}">
+    <Window.Resources>
+        <Style x:Key="MyWindowStyle" TargetType="{x:Type Window}">
+            <Setter Property="WindowStyle" Value="None" />
+            <Setter Property="AllowsTransparency" Value="True"/>
+            <Setter Property="Background" Value="GhostWhite"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="BorderThickness" Value="5"></Setter>
+            <Setter Property="BorderBrush" Value="LightYellow"></Setter>
+        </Style>
+        <Style x:Key="MyButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#2a89a4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20 10"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="DarkSlateGray"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2a89a4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="WrapPanel" x:Key="myWrapPanelStyle">
+            <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+            <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -14,10 +45,10 @@
             <RowDefinition Height="250*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="100*"></ColumnDefinition>
             <ColumnDefinition Width="300*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <WrapPanel Grid.Row="0" Grid.Column="0">
+        <WrapPanel Grid.Row="0" Grid.Column="0" Style="{DynamicResource myWrapPanelStyle}">
             <Ellipse x:Name="tarvarPic" Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Left" >
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="/Resources/avatar3.jpeg" Stretch="Uniform"/>
@@ -26,7 +57,7 @@
             <StackPanel>
                 <Label Content="当前用户"></Label>
                 <Label Content="星期三"></Label>
-                <Label Content="2024-6-12"></Label>
+                <Label Content="{Binding LbNowTime, StringFormat=d}"></Label>
             </StackPanel>
             <Rectangle Width="60" Height="60">
                 <Rectangle.Fill>
@@ -34,26 +65,28 @@
                 </Rectangle.Fill>
             </Rectangle>
         </WrapPanel>
-        <WrapPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Calendar />
+        <WrapPanel Grid.Row="1" Grid.Column="0" Style="{DynamicResource myWrapPanelStyle}">
+            <Calendar VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </WrapPanel>
-        <WrapPanel Grid.Row="2" Grid.Column="0" x:Name="wpl3">
-            <lvc:CartesianChart Margin="20" Series="{Binding SeriesCollection}" LegendLocation="Top"
+        <WrapPanel Grid.Row="2" Grid.Column="0" x:Name="wpl3" Style="{DynamicResource myWrapPanelStyle}">
+            <!-- Series="{Binding SeriesCollection}" -->
+            <lvc:CartesianChart Margin="20" 
+                                LegendLocation="Top"
                                 VerticalAlignment="Center" HorizontalAlignment="Center"
                                 Width="{Binding ElementName=wpl3, Path=ActualWidth}"
                                 Height="{Binding ElementName=wpl3, Path=ActualHeight}"/>
         </WrapPanel>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" 
-                    x:Name="sp1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button x:Name="btnAll" Height="50" Width="100" Margin="10">全部</Button>
-            <Button x:Name="btnLife" Height="50" Width="100" Margin="10">生活</Button>
-            <Button x:Name="btnWork" Height="50" Width="100" Margin="10">工作</Button>
-            <Button x:Name="btnUndefined" Height="50" Width="100" Margin="10">未定义</Button>
-            <Button x:Name="btnDone" Height="50" Width="100" Margin="10">已完成</Button>
+                    x:Name="sp1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Button x:Name="btnAll" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">全部</Button>
+            <Button x:Name="btnLife" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">生活</Button>
+            <Button x:Name="btnWork" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">工作</Button>
+            <Button x:Name="btnUndefined" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">未定义</Button>
+            <Button x:Name="btnDone" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">已完成</Button>
         </StackPanel>
-        <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical">
-            <ListView x:Name="lvTask">
-               <!-- <ListView.ItemTemplate>
+        <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical" Style="{DynamicResource myWrapPanelStyle}">
+            <ListView x:Name="lvTask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="{Binding ElementName=wp5, Path=ActualWidth}">
+                <!-- <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="2" BorderBrush="Bisque">
                             <StackPanel Orientation="Vertical" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center">

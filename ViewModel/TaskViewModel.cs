@@ -1,17 +1,13 @@
-﻿using Prism.Mvvm;
+﻿using LiveCharts.Wpf;
+using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Threading;
 using WPFToDoList.Model;
 using WPFToDoList.Service;
-using System.Collections.ObjectModel;
-using LiveCharts.Wpf;
+using WPFToDoList.View;
 
 
 namespace WPFToDoList.ViewModel
@@ -22,24 +18,85 @@ namespace WPFToDoList.ViewModel
     public class TaskViewModel : BindableBase, INavigationAware
     {
         private readonly DependencyObject _myDependencyObject;
+        public TaskService TaskService = null;
 
         public TaskViewModel()
         {
             _myDependencyObject = new DependencyObject();
-            LbNowTime=DateTime.Now;
             SeriesCollection = new ObservableCollection<Series>();
+            CurrentUserName = "帅气的卡夫卡";
             InitializeChart();
+            InitializeTimer();
+            TaskList = GetTaskData();
+            SaveCommand = new RelayCommand(SaveCommand_Execute);
+            TaskService=new TaskService();
         }
 
-        public static readonly DependencyProperty LbNowTimeProperty =
-            DependencyProperty.Register("LbNowTime", typeof(DateTime), typeof(DependencyObject));
-
-        // 创建属性的公开访问器
-        public DateTime LbNowTime
+        public void SaveCommand_Execute(object parameter)
         {
-            get { return (DateTime)_myDependencyObject.GetValue(LbNowTimeProperty); }
-            set { _myDependencyObject.SetValue(LbNowTimeProperty, value); }
+
         }
+
+        #region 定时器
+        private DispatcherTimer _timer;
+
+        private void InitializeTimer()
+        {
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            DayOfWeek = DateTime.Now.DayOfWeek;
+            CurrentTime = DateTime.Now;
+        }
+        #endregion
+
+        #region 变量 
+        public RelayCommand SaveCommand { get; private set; }
+        /// <summary>
+        /// 当前时间
+        /// </summary>
+        private DateTime currentTime;
+        public DateTime CurrentTime
+        {
+            get { return currentTime; }
+            set { SetProperty(ref currentTime, value); }
+        }
+
+        /// <summary>
+        /// 星期几
+        /// </summary>
+        private DayOfWeek dayOfWeek;
+        public DayOfWeek DayOfWeek
+        {
+            get { return dayOfWeek; }
+            set { SetProperty(ref dayOfWeek, value); }
+        }
+
+        /// <summary>
+        /// 当前用户
+        /// </summary>
+        private string currentUserName;
+        public string CurrentUserName
+        {
+            get { return currentUserName; }
+            set { SetProperty(ref currentUserName, value); }
+        }
+
+        /// <summary>
+        /// 任务数据
+        /// </summary>
+        private List<TaskModel> taskList;
+        public List<TaskModel> TaskList
+        {
+            get { return taskList; }
+            set { SetProperty(ref taskList, value); }
+        }
+        #endregion
 
         private ObservableCollection<Series> _seriesCollection;
 
@@ -68,7 +125,7 @@ namespace WPFToDoList.ViewModel
 
         public List<TaskModel> GetTaskData()
         {
-            return taskService.GetTaskData(Data.OptionType.offlineType);
+            return taskService.GetTaskData(Data.OptionType.onLineType);
         }
 
         //需要继承INavigationAware接口，实现接口中三个方法

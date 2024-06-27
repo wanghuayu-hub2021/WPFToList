@@ -23,7 +23,7 @@ namespace WPFToDoList.View
         public TaskView()
         {
             InitializeComponent();
-            this.DataContext = new TaskViewModel();
+            //this.DataContext = new TaskViewModel();
         }
     }
 }

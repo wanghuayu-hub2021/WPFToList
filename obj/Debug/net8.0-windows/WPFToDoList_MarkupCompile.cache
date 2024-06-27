@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 D:\csharpTrain\ToDoList\WPFToList\App.xaml
-11407045341
+71273424709
 
-41685374402
-198-1509178875
-MainWindow.xaml;
+211159802121
+204-79836745
+GenericStyles.xaml;MainWindow.xaml;ResourceDictionary.xaml;View\Login.xaml;View\Styles\ResourceDictionary.xaml;View\TaskView.xaml;View\WinTest.xaml;
 
 False
 

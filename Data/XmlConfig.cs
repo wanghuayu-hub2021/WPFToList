@@ -108,7 +108,7 @@ namespace WPFToDoList.Data
                                     break;
                             }
                         }
-                        taskModel.SubTasks.Add(subTaskModel);
+                        //taskModel.SubTasks.Add(subTaskModel);
                     }
                 }
                 data.Add(taskModel);

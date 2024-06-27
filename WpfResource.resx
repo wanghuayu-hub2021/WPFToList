@@ -127,6 +127,9 @@
   <data name="avatar3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\avatar3.jpeg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="avatar4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\avatar4.jpg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="weather1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\weather1.jpeg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

@@ -12,15 +12,28 @@
     <None Remove="Resources\avatar1.jpeg" />
     <None Remove="Resources\avatar2.jpeg" />
     <None Remove="Resources\avatar3.jpeg" />
+    <None Remove="Resources\avatar4.jpg" />
+    <None Remove="Resources\avatar5.jpg" />
+    <None Remove="Resources\avatar6.jpeg" />
+    <None Remove="Resources\avatar7.jpeg" />
+    <None Remove="Resources\avatar8.jpg" />
     <None Remove="Resources\weather1.jpeg" />
     <None Remove="Resources\weather2.jpg" />
     <None Remove="Resources\weather3.jpg" />
+    <None Remove="Resources\weather4.jpg" />
+    <None Remove="Resources\weather5.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\avatar6.jpeg" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +46,12 @@
     <Resource Include="Resources\avatar3.jpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\avatar4.jpg" />
+    <Resource Include="Resources\avatar5.jpg" />
+    <Resource Include="Resources\avatar7.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\avatar8.jpg" />
     <Resource Include="Resources\weather1.jpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -42,6 +61,8 @@
     <Resource Include="Resources\weather3.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\weather4.jpg" />
+    <Resource Include="Resources\weather5.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +78,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>WpfResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\csharpTrain\ToDoList\WPFToList\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\csharpTrain\ToDoList\WPFToList\.editorconfig" />
   </ItemGroup>
 
 </Project>

@@ -93,6 +93,16 @@ namespace WPFToDoList {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
+        internal static byte[] avatar4 {
+            get {
+                object obj = ResourceManager.GetObject("avatar4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
         internal static byte[] weather1 {
             get {
                 object obj = ResourceManager.GetObject("weather1", resourceCulture);

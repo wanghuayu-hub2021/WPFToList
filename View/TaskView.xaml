@@ -7,7 +7,11 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="猫嘟清单" Height="600" Width="1000" 
-        Style="{DynamicResource MyWindowStyle}">
+         Style="{DynamicResource MyWindowStyle}"
+        >
+    <Window.DataContext>
+        <local:TaskViewModel/>
+    </Window.DataContext>
     <Window.Resources>
         <Style x:Key="MyWindowStyle" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None" />
@@ -36,8 +40,22 @@
         <Style TargetType="WrapPanel" x:Key="myWrapPanelStyle">
             <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
             <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+            <Setter Property="Orientation" Value="Horizontal"></Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="myTextBlockStyle">
+            <Setter Property="FontSize" Value="12"></Setter>
+            <Setter Property="FontStyle" Value="Normal"></Setter>
+            <Setter Property="Margin" Value="4"></Setter>
+        </Style>
+        <Style TargetType="GridViewColumnHeader" x:Key="myColumnHeader">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="12"></Setter>
+            <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -49,27 +67,28 @@
             <ColumnDefinition Width="300*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <WrapPanel Grid.Row="0" Grid.Column="0" Style="{DynamicResource myWrapPanelStyle}">
-            <Ellipse x:Name="tarvarPic" Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="/Resources/avatar3.jpeg" Stretch="Uniform"/>
-                </Ellipse.Fill>
-            </Ellipse>
-            <StackPanel>
-                <Label Content="当前用户"></Label>
-                <Label Content="星期三"></Label>
-                <Label Content="{Binding LbNowTime, StringFormat=d}"></Label>
+            <StackPanel Orientation="Horizontal">
+                <Ellipse x:Name="tarvarPic" Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/Resources/avatar8.jpg" Stretch="Uniform"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <StackPanel>
+                    <TextBlock Text="{Binding CurrentUserName}" x:Name="lbUserName" Style="{DynamicResource myTextBlockStyle}"></TextBlock>
+                    <TextBlock Text="{Binding DayOfWeek}" x:Name="lbDayOfWeek" Style="{DynamicResource myTextBlockStyle}"></TextBlock>
+                    <TextBlock Text="{Binding CurrentTime}" x:Name="tbCurrentTime" Style="{DynamicResource myTextBlockStyle}"></TextBlock>
+                </StackPanel>
+                <Rectangle Width="60" Height="60">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="/Resources/weather5.jpg" Stretch="Uniform"/>
+                    </Rectangle.Fill>
+                </Rectangle>
             </StackPanel>
-            <Rectangle Width="60" Height="60">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="/Resources/weather1.jpeg" Stretch="Uniform"/>
-                </Rectangle.Fill>
-            </Rectangle>
         </WrapPanel>
         <WrapPanel Grid.Row="1" Grid.Column="0" Style="{DynamicResource myWrapPanelStyle}">
             <Calendar VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </WrapPanel>
         <WrapPanel Grid.Row="2" Grid.Column="0" x:Name="wpl3" Style="{DynamicResource myWrapPanelStyle}">
-            <!-- Series="{Binding SeriesCollection}" -->
             <lvc:CartesianChart Margin="20" 
                                 LegendLocation="Top"
                                 VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -84,42 +103,37 @@
             <Button x:Name="btnUndefined" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">未定义</Button>
             <Button x:Name="btnDone" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">已完成</Button>
         </StackPanel>
+
+        <!--list显示 -->
         <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical" Style="{DynamicResource myWrapPanelStyle}">
-            <ListView x:Name="lvTask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="{Binding ElementName=wp5, Path=ActualWidth}">
-                <!-- <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="2" BorderBrush="Bisque">
-                            <StackPanel Orientation="Vertical" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <CheckBox ></CheckBox>
-                                <TextBlock Name="textBlok" TextWrapping="Wrap" Padding="0" LineHeight="0.1" FontSize="20"
-                                           Width="{Binding RelativeSource={RelativeSource Self},Path=FontSize}" Text="{Binding Name}"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate> -->
-                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
-                    <CheckBox Width="30" IsChecked="False"/>
-                    <ListViewItem>第1条记录</ListViewItem>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
-                    <CheckBox Width="30" IsChecked="False"/>
-                    <ListViewItem>第2条记录</ListViewItem>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
-                    <CheckBox Width="30" IsChecked="False"/>
-                    <ListViewItem>第3条记录</ListViewItem>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
-                    <CheckBox Width="30" IsChecked="False"/>
-                    <ListViewItem>第4条记录</ListViewItem>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Width="500" Margin="10">
-                    <CheckBox Width="30" IsChecked="False"/>
-                    <ListViewItem>第5条记录</ListViewItem>
-                </StackPanel>
+            <ListView x:Name="lvTask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                      Width="{Binding ElementName=wp5, Path=ActualWidth}"
+                      ItemsSource="{Binding TaskList}" >
+                
+                <ListView.View>
+                    <GridView x:Name="gvTask">
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style/>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridViewColumn Width="auto" HeaderContainerStyle="{DynamicResource myColumnHeader}" Header="">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox x:Name="cbxStatus" IsChecked="False"></CheckBox>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="auto" HeaderContainerStyle="{DynamicResource myColumnHeader}" Header="任务描述" DisplayMemberBinding="{Binding TaskDescription }"/>
+                        <GridViewColumn Width="auto" Header="开始时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding StartDate}"/>
+                        <GridViewColumn Width="auto" Header="结束时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding EndDate}"/>
+                        <GridViewColumn Width="auto" Header="标签分类" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding Tags}"/>
+                        <GridViewColumn Width="auto" Header="完成时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding CompletionDate}"/>
+                        <GridViewColumn Width="60" Header="任务状态" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding TaskStatus}"/>
+                    </GridView>
+                </ListView.View>
             </ListView>
             <WrapPanel Margin="5">
                 <Button Content="新增" Width="80" Margin="5"></Button>
+                <Button Content="保存" Width="80" Margin="5" Command="{Binding SaveCommand}"></Button>
                 <DatePicker Text="日期" Width="80" Margin="5"></DatePicker>
                 <Label Content="标签" Margin="5"></Label>
                 <TextBlock Text="" Width="80"  Margin="5" Background="AliceBlue"></TextBlock>

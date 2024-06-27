@@ -21,7 +21,7 @@ namespace WPFToDoList.Model
         /// <summary>
         /// 子任务，这里假设子任务是一个字符串，可能包含子任务的列表或描述
         /// </summary>
-        public List<SubTaskModel> SubTasks { get; set; }
+        //public List<SubTaskModel> SubTasks { get; set; }
 
         /// <summary>
         /// 任务完成状态，0 未开始 1 进行中 2 完成
@@ -58,7 +58,6 @@ namespace WPFToDoList.Model
         /// </summary>
         public string Tags { get; set; }
 
-        // 其他方法
         public override string ToString()
         {
             return $"Task ID: {TaskId}, Description: {TaskDescription}, Status: {TaskStatus}, Type: {TaskType}, Start Date: {StartDate}, Completion Date: {CompletionDate}, Recurring: {IsRecurring}, Tags: {Tags}";

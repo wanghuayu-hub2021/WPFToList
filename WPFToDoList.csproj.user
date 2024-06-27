@@ -13,15 +13,30 @@
     <Compile Update="View\TaskView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\WinTest.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="GenericStyles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Login.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="View\Styles\ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\TaskView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\WinTest.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

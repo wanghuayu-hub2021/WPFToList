@@ -7,11 +7,8 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="猫嘟清单" Height="600" Width="1000" 
-         Style="{DynamicResource MyWindowStyle}"
-        >
-    <Window.DataContext>
-        <local:TaskViewModel/>
-    </Window.DataContext>
+         Style="{DynamicResource MyWindowStyle}">
+
     <Window.Resources>
         <Style x:Key="MyWindowStyle" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None" />
@@ -55,7 +52,7 @@
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -104,12 +101,10 @@
             <Button x:Name="btnDone" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">已完成</Button>
         </StackPanel>
 
-        <!--list显示 -->
         <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical" Style="{DynamicResource myWrapPanelStyle}">
             <ListView x:Name="lvTask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       Width="{Binding ElementName=wp5, Path=ActualWidth}"
-                      ItemsSource="{Binding TaskList}" >
-                
+                      ItemsSource="{Binding TaskList}" SelectedItem="{Binding SelectTask}">
                 <ListView.View>
                     <GridView x:Name="gvTask">
                         <GridView.ColumnHeaderContainerStyle>
@@ -122,7 +117,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Width="auto" HeaderContainerStyle="{DynamicResource myColumnHeader}" Header="任务描述" DisplayMemberBinding="{Binding TaskDescription }"/>
+                        <GridViewColumn Width="auto" Header="任务描述" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding TaskDescription}"/>
                         <GridViewColumn Width="auto" Header="开始时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding StartDate}"/>
                         <GridViewColumn Width="auto" Header="结束时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding EndDate}"/>
                         <GridViewColumn Width="auto" Header="标签分类" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding Tags}"/>
@@ -131,14 +126,22 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+
             <WrapPanel Margin="5">
-                <Button Content="新增" Width="80" Margin="5"></Button>
-                <Button Content="保存" Width="80" Margin="5" Command="{Binding SaveCommand}"></Button>
+                <StackPanel DataContext="{Binding ElementName=lvTask,Path=SelectedItem}" Orientation="Horizontal">
+                    <Label Content="任务描述" Margin="5"></Label>
+                    <TextBox Text="{Binding TaskDescription}" Width="80"  Margin="5"></TextBox>
+                    <Label Content="标签" Margin="5"></Label>
+                    <TextBox Text="{Binding Tags}" Width="80"  Margin="5"></TextBox>
+                </StackPanel>
+                <Button Content="保存" Width="80"  Margin="5" Command="{Binding SaveCommand}"></Button>
+                <Button Content="删除" Width="80"  Margin="5" Command="{Binding DeleteCommand}"></Button>
+            </WrapPanel>
+
+            <WrapPanel Margin="5">
+                <Button Content="新增" Width="80" Margin="5" Command="{Binding AddCommand}"></Button>
                 <DatePicker Text="日期" Width="80" Margin="5"></DatePicker>
-                <Label Content="标签" Margin="5"></Label>
-                <TextBlock Text="" Width="80"  Margin="5" Background="AliceBlue"></TextBlock>
             </WrapPanel>
         </WrapPanel>
-
     </Grid>
 </Window>

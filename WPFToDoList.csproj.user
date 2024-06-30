@@ -7,6 +7,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\AddTaskView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Login.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -25,6 +28,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\AddTaskView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Login.xaml">

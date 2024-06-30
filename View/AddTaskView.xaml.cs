@@ -16,14 +16,14 @@ using WPFToDoList.ViewModel;
 namespace WPFToDoList.View
 {
     /// <summary>
-    /// TaskView.xaml 的交互逻辑
+    /// AddTaskView.xaml 的交互逻辑
     /// </summary>
-    public partial class TaskView : Window
+    public partial class AddTaskView : Window
     {
-        public TaskView()
+        public AddTaskView()
         {
             InitializeComponent();
-            this.DataContext = new TaskViewModel();
+            this.DataContext = new AddTaskViewModel();
         }
     }
 }

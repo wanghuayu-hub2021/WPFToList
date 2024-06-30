@@ -81,7 +81,7 @@ namespace WPFToDoList.Data
         public int UpdateTaskData(OptionType optionType, TaskModel taskModel)
         {
             string updateSql = string.Format(
-                @"update dbo.tb_task t set t.TaskDescription='{0}',t.CompletionDate='{1}',t.TaskStatus='{2}' where t.TaskId='{3}';",
+                @"update dbo.tb_task set TaskDescription='{0}',CompletionDate='{1}',TaskStatus='{2}' where TaskId='{3}';",
                 taskModel.TaskDescription, taskModel.CompletionDate, taskModel.TaskStatus, taskModel.TaskId);
             int res = DbAccess.ExecuteDataNonQuery(updateSql);
             return res;
@@ -96,7 +96,7 @@ namespace WPFToDoList.Data
         public int DeleteTaskData(OptionType optionType, TaskModel taskModel)
         {
             string updateSql = string.Format(
-                @"delete from dbo.tb_task t where t.TaskId='{0}';", taskModel.TaskId);
+                @"delete from dbo.tb_task where TaskId='{0}';", taskModel.TaskId);
             int res = DbAccess.ExecuteDataNonQuery(updateSql);
             return res;
         }

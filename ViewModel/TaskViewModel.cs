@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using WPFToDoList.Data;
 using WPFToDoList.Model;
 using WPFToDoList.Service;
 using WPFToDoList.View;
@@ -29,12 +30,8 @@ namespace WPFToDoList.ViewModel
             InitializeTimer();
             TaskList = GetTaskData();
             SaveCommand = new RelayCommand(SaveCommand_Execute);
-            TaskService=new TaskService();
-        }
-
-        public void SaveCommand_Execute(object parameter)
-        {
-
+            TaskService = new TaskService();
+            SelectTask = new TaskModel();
         }
 
         #region 定时器
@@ -56,7 +53,108 @@ namespace WPFToDoList.ViewModel
         #endregion
 
         #region 变量 
-        public RelayCommand SaveCommand { get; private set; }
+        private RelayCommand saveCommand;
+        /// <summary>
+        /// 保存
+        /// </summary>
+        public RelayCommand SaveCommand
+        {
+            get
+            {
+                if (saveCommand == null)
+                    saveCommand = new RelayCommand(SaveCommand_Execute);
+                return saveCommand;
+            }
+            set { saveCommand = value; }
+        }
+
+        public void SaveCommand_Execute(object parameter)
+        {
+            try
+            {
+                if (SelectTask != null)
+                {
+                    int res = TaskService.UpdateTaskData(OptionType.onLineType, SelectTask);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(@"更新失败,提示信息:{0}", ex.Message));
+            }
+            finally
+            {
+
+            }
+        }
+
+        private RelayCommand deleteCommand;
+        /// <summary>
+        /// 删除
+        /// </summary>
+        public RelayCommand DeleteCommand
+        {
+            get
+            {
+                if (deleteCommand == null)
+                    deleteCommand = new RelayCommand(DeleteCommand_Execute);
+                return deleteCommand;
+            }
+            set { deleteCommand = value; }
+        }
+
+        public void DeleteCommand_Execute(object parameter)
+        {
+            try
+            {
+                if (SelectTask != null)
+                {
+                    int res = TaskService.DeleteTaskData(OptionType.onLineType, SelectTask);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(@"删除失败,提示信息:{0}", ex.Message));
+            }
+            finally
+            {
+                TaskList.Remove(SelectTask);
+            }
+        }
+
+        private RelayCommand addCommand;
+        /// <summary>
+        /// 新增
+        /// </summary>
+        public RelayCommand AddCommand
+        {
+            get
+            {
+                if (addCommand == null)
+                    addCommand = new RelayCommand(AddCommand_Execute);
+                return addCommand;
+            }
+            set { addCommand = value; }
+        }
+
+        public void AddCommand_Execute(object parameter)
+        {
+            AddTaskView addTaskView = new AddTaskView();
+            addTaskView.Show();
+        }
+
+        private TaskModel selectTask;
+        /// <summary>
+        /// 选中任务行
+        /// </summary>
+        public TaskModel SelectTask
+        {
+            get { return selectTask; }
+            set
+            {
+                selectTask = value; RaisePropertyChanged(nameof(SelectTask));
+            }
+        }
+
         /// <summary>
         /// 当前时间
         /// </summary>

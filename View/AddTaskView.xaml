@@ -1,32 +1,31 @@
-﻿<Window x:Class="WPFToDoList.View.AddTaskView"
+﻿<Window x:Name="addTaskView" x:Class="WPFToDoList.View.AddTaskView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFToDoList.View"
         mc:Ignorable="d"
-        Title="AddTaskView" Height="300" Width="400" >
+        Title="新增任务" Height="279" Width="400"  IsEnabled="{Binding KeepAlive }">
+
     <Grid Margin="0,0,0,145">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Margin="5,2,5,2">
                 <TextBlock Text="任务描述" HorizontalAlignment="Center"></TextBlock>
-                <TextBox Width="300"></TextBox>
+                <TextBox Width="300" Text="{Binding TaskDescription}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5,2,5,2">
                 <TextBlock Text="开始时间"></TextBlock>
-                <TextBox Width="150"></TextBox>
+                <DatePicker Width="150" SelectedDateFormat="Short" SelectedDate="{Binding StartDate}"></DatePicker>
                 <TextBlock Text="结束时间"></TextBlock>
-                <TextBox Width="150"></TextBox>
+                <DatePicker Width="150" SelectedDateFormat="Short"  SelectedDate="{Binding EndDate}" ></DatePicker>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5,2,5,2">
                 <TextBlock Text="标签"></TextBlock>
-                <TextBox Width="150"></TextBox>
-                <TextBlock Text="完成时间"></TextBlock>
-                <TextBox Width="150"></TextBox>
+                <TextBox Width="150" Text="{Binding Tags}"></TextBox>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">

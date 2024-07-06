@@ -10,6 +10,7 @@
          Style="{DynamicResource MyWindowStyle}">
 
     <Window.Resources>
+        <local:PageNumberConverter x:Key="PageNumberConverter" />
         <Style x:Key="MyWindowStyle" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None" />
             <Setter Property="AllowsTransparency" Value="True"/>
@@ -86,37 +87,46 @@
             <Calendar VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </WrapPanel>
         <WrapPanel Grid.Row="2" Grid.Column="0" x:Name="wpl3" Style="{DynamicResource myWrapPanelStyle}">
-            <lvc:CartesianChart Margin="20" 
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <lvc:CartesianChart 
                                 LegendLocation="Top"
-                                VerticalAlignment="Center" HorizontalAlignment="Center"
-                                Width="{Binding ElementName=wpl3, Path=ActualWidth}"
-                                Height="{Binding ElementName=wpl3, Path=ActualHeight}"/>
+                                Width="{Binding ActualWidth, ElementName=wpl3}"
+                                Height="280"
+                                Series="{Binding SeriesCollection}">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="任务数据统计" Labels="{Binding XAxisLabels}"/>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
+                <TextBlock Text="{Binding ShowTotalMessage}"  VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontWeight="Bold" Foreground="Black"/>
+                <TextBlock Text="{Binding ShowTotalMessage0}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontWeight="Bold"  Foreground="DarkBlue"/>
+                <TextBlock Text="{Binding ShowTotalMessage1}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontWeight="Bold" Foreground="Orange"/>
+                <TextBlock Text="{Binding ShowTotalMessage2}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontWeight="Bold" Foreground="DarkGreen"/>
+
+            </StackPanel>
         </WrapPanel>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" 
                     x:Name="sp1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <Button x:Name="btnAll" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">全部</Button>
-            <Button x:Name="btnLife" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">生活</Button>
-            <Button x:Name="btnWork" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">工作</Button>
-            <Button x:Name="btnUndefined" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">未定义</Button>
-            <Button x:Name="btnDone" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">已完成</Button>
+            <Button x:Name="btnAll" Height="50" Width="100" Margin="10" 
+                     Command="{Binding QueryCommand}" Style="{DynamicResource MyButtonStyle}">全部</Button>
+            <Button x:Name="btnUndo" Height="50" Width="100" Margin="10" 
+                     Command="{Binding QueryCommandUndo}" Style="{DynamicResource MyButtonStyle}">未开始</Button>
+            <Button x:Name="btnDoing" Height="50" Width="100" Margin="10" 
+                     Command="{Binding QueryCommandDoing}" Style="{DynamicResource MyButtonStyle}">进行中</Button>
+            <Button x:Name="btnDone" Height="50" Width="100" Margin="10" 
+                     Command="{Binding QueryCommandDone}" Style="{DynamicResource MyButtonStyle}">已完成</Button>
+            <Button x:Name="btnKeepAtn" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">专注</Button>
         </StackPanel>
 
         <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical" Style="{DynamicResource myWrapPanelStyle}">
             <ListView x:Name="lvTask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      Width="{Binding ElementName=wp5, Path=ActualWidth}"
-                      ItemsSource="{Binding TaskList}" SelectedItem="{Binding SelectTask}">
+                      Width="{Binding ElementName=wp5, Path=ActualWidth}" 
+                      ItemsSource="{Binding Items}" SelectedItem="{Binding SelectTask}">
                 <ListView.View>
-                    <GridView x:Name="gvTask">
-                        <GridView.ColumnHeaderContainerStyle>
-                            <Style/>
-                        </GridView.ColumnHeaderContainerStyle>
-                        <GridViewColumn Width="auto" HeaderContainerStyle="{DynamicResource myColumnHeader}" Header="">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox x:Name="cbxStatus" IsChecked="False"></CheckBox>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                    <GridView x:Name="gvTask" >
                         <GridViewColumn Width="auto" Header="任务描述" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding TaskDescription}"/>
                         <GridViewColumn Width="auto" Header="开始时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding StartDate}"/>
                         <GridViewColumn Width="auto" Header="结束时间" HeaderContainerStyle="{DynamicResource myColumnHeader}" DisplayMemberBinding="{Binding EndDate}"/>
@@ -126,13 +136,54 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding PageChangedCommand}" CommandParameter="1" Content="第一页" Width="80" Margin="5"/>
+                <Button Command="{Binding PageChangedCommand}" Width="80" Content="上一页" Margin="5">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource PageNumberConverter}">
+                            <Binding Path="CurrentPageNumber" />
+                            <Binding Source="-1" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+                <TextBlock Text="第" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Text="{Binding CurrentPageNumber, Mode=TwoWay}" Margin="5" VerticalAlignment="Center"/>
+                <TextBlock Text="页" VerticalAlignment="Center" Margin="5"/>
+                <Button Command="{Binding PageChangedCommand}" 
+                        Width="80" Content="下一页" Margin="5">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource PageNumberConverter}">
+                            <Binding Path="CurrentPageNumber" />
+                            <Binding Source="+1" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+                <Button Command="{Binding PageChangedCommand}" CommandParameter="{Binding TotalPages}"
+                        Width="80" Content="最后页" Margin="5"/>
+                <TextBlock Text="页面条数" VerticalAlignment="Center" Margin="5"/>
+                <TextBox VerticalAlignment="Center" x:Name="tbPageSize" Width="80" PreviewKeyDown="TextBox_PreviewKeyDown" >
+                    <TextBox.Text>
+                        <Binding Path="PageSize" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:RangeValidationRule Min="1" Max="20" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
 
             <WrapPanel Margin="5">
                 <StackPanel DataContext="{Binding ElementName=lvTask,Path=SelectedItem}" Orientation="Horizontal">
                     <Label Content="任务描述" Margin="5"></Label>
-                    <TextBox Text="{Binding TaskDescription}" Width="80"  Margin="5"></TextBox>
+                    <TextBox Text="{Binding TaskDescription}" Width="80"  Margin="5" Name="tbSelectTaskDsp"></TextBox>
                     <Label Content="标签" Margin="5"></Label>
                     <TextBox Text="{Binding Tags}" Width="80"  Margin="5"></TextBox>
+                    <Label Content="状态" Margin="5"></Label>
+                    <ComboBox Width="80" Height="{Binding ElementName=tbSelectTaskDsp,Path=ActualHeight}" SelectedIndex="{Binding TaskStatus}">
+                        <ComboBoxItem Content="未开始"></ComboBoxItem>
+                        <ComboBoxItem Content="进行中"></ComboBoxItem>
+                        <ComboBoxItem Content="已完成"></ComboBoxItem>
+                    </ComboBox>
                 </StackPanel>
                 <Button Content="保存" Width="80"  Margin="5" Command="{Binding SaveCommand}"></Button>
                 <Button Content="删除" Width="80"  Margin="5" Command="{Binding DeleteCommand}"></Button>
@@ -140,6 +191,7 @@
 
             <WrapPanel Margin="5">
                 <Button Content="新增" Width="80" Margin="5" Command="{Binding AddCommand}"></Button>
+                <Button Content="查询" Width="80" Margin="5" Command="{Binding QueryCommand}"></Button>
                 <DatePicker Text="日期" Width="80" Margin="5"></DatePicker>
             </WrapPanel>
         </WrapPanel>

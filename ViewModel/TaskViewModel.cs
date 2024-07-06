@@ -1,9 +1,13 @@
-﻿using LiveCharts.Wpf;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
 using Prism.Mvvm;
 using Prism.Regions;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using WPFToDoList.Data;
 using WPFToDoList.Model;
@@ -18,23 +22,35 @@ namespace WPFToDoList.ViewModel
     /// </summary>
     public class TaskViewModel : BindableBase, INavigationAware
     {
-        private readonly DependencyObject _myDependencyObject;
-        public TaskService TaskService = null;
-
+        #region 初始化
         public TaskViewModel()
         {
-            _myDependencyObject = new DependencyObject();
-            SeriesCollection = new ObservableCollection<Series>();
             CurrentUserName = "帅气的卡夫卡";
-            InitializeChart();
             InitializeTimer();
             TaskList = GetTaskData();
+            CurrentPageNumber = 1;
+            Items = new ObservableCollection<TaskModel>(GetPageItems(TaskList, _currentPageNumber, PageSize));
             SaveCommand = new RelayCommand(SaveCommand_Execute);
-            TaskService = new TaskService();
             SelectTask = new TaskModel();
         }
 
-        #region 定时器
+        public TaskService taskService = new TaskService();
+        /// <summary>
+        /// 查询任务数据
+        /// </summary>
+        /// <returns></returns>
+        public List<TaskModel> GetTaskData()
+        {
+            var res = taskService.GetTaskData(Data.OptionType.onLineType);
+            TotalCount = res.Count;
+            tmpTaskList = res;
+            InitializeChart();
+            return res;
+        }
+        #endregion
+
+
+        #region 定时器显示时间日期
         private DispatcherTimer _timer;
 
         private void InitializeTimer()
@@ -52,7 +68,89 @@ namespace WPFToDoList.ViewModel
         }
         #endregion
 
-        #region 变量 
+        #region 分页逻辑
+        private int _pageSize = 15;
+        /// <summary>
+        /// 分页大小
+        /// </summary>
+        public int PageSize
+        {
+            get { return _pageSize; }
+            set
+            {
+                if (value < 1 || value > 20)
+
+                    SetProperty(ref _pageSize, 15);
+                else
+                    SetProperty(ref _pageSize, value);
+            }
+        }
+
+        public ObservableCollection<TaskModel> Items { get; set; } // 绑定到ListView的数据源
+
+        // 总项数，用于计算总页数
+        public int TotalCount { get; set; }
+
+        private RelayCommand pageChangedCommand;
+        /// <summary>
+        /// 保存
+        /// </summary>
+        public RelayCommand PageChangedCommand
+        {
+            get
+            {
+                if (pageChangedCommand == null)
+                    pageChangedCommand = new RelayCommand(PageChangedCommand_Execute);
+                return pageChangedCommand;
+            }
+            set { pageChangedCommand = value; }
+        }
+
+        public void PageChangedCommand_Execute(object parameter)
+        {
+            int pageNo = Convert.ToInt32(parameter);
+            PageChanged(pageNo);
+            //CurrentPageNumber = pageNo;
+        }
+
+        // 翻页方法
+        private void PageChanged(int pageNumber)
+        {
+            if (pageNumber > 0 && pageNumber <= Math.Max(TotalCount / PageSize, 1))
+            {
+                Items.Clear();
+                var pageItems = GetPageItems(TaskList, pageNumber, PageSize);
+                foreach (var item in pageItems)
+                {
+                    Items.Add(item);
+                }
+                CurrentPageNumber = pageNumber;
+            }
+        }
+
+        // 根据当前页码和每页显示的项数获取数据
+        private IEnumerable<TaskModel> GetPageItems(List<TaskModel> allItems, int pageNumber, int pageSize)
+        {
+            return allItems.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
+
+        private int _currentPageNumber;
+        /// <summary>
+        /// 当前页数
+        /// </summary>
+        public int CurrentPageNumber
+        {
+            get { return _currentPageNumber; }
+            set
+            {
+                SetProperty(ref _currentPageNumber, value);
+            }
+        }
+
+        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+        #endregion
+
+        #region 常规命令
         private RelayCommand saveCommand;
         /// <summary>
         /// 保存
@@ -74,7 +172,7 @@ namespace WPFToDoList.ViewModel
             {
                 if (SelectTask != null)
                 {
-                    int res = TaskService.UpdateTaskData(OptionType.onLineType, SelectTask);
+                    int res = taskService.UpdateTaskData(OptionType.onLineType, SelectTask);
                 }
             }
             catch (Exception ex)
@@ -83,7 +181,7 @@ namespace WPFToDoList.ViewModel
             }
             finally
             {
-
+                QueryCommand_Execute(null);
             }
         }
 
@@ -108,7 +206,7 @@ namespace WPFToDoList.ViewModel
             {
                 if (SelectTask != null)
                 {
-                    int res = TaskService.DeleteTaskData(OptionType.onLineType, SelectTask);
+                    int res = taskService.DeleteTaskData(OptionType.onLineType, SelectTask);
                 }
             }
             catch (Exception ex)
@@ -118,6 +216,8 @@ namespace WPFToDoList.ViewModel
             finally
             {
                 TaskList.Remove(SelectTask);
+                tmpTaskList.Remove(SelectTask);
+                InitializeChart();
             }
         }
 
@@ -138,10 +238,104 @@ namespace WPFToDoList.ViewModel
 
         public void AddCommand_Execute(object parameter)
         {
-            AddTaskView addTaskView = new AddTaskView();
+            AddTaskView addTaskView = new AddTaskView(this);
             addTaskView.Show();
         }
 
+        private RelayCommand queryCommand;
+        /// <summary>
+        /// 查询
+        /// </summary>
+        public RelayCommand QueryCommand
+        {
+            get
+            {
+                if (queryCommand == null)
+                    queryCommand = new RelayCommand(QueryCommand_Execute);
+                return queryCommand;
+            }
+            set { queryCommand = value; }
+        }
+
+        private void QueryCommand_Execute(object obj)
+        {
+            TaskList = GetTaskData();
+            TotalCount = TaskList.Count;
+            PageChangedCommand_Execute(CurrentPageNumber);
+        }
+
+        private RelayCommand queryCommandUndo;
+        /// <summary>
+        /// 查询未开始
+        /// </summary>
+        public RelayCommand QueryCommandUndo
+        {
+            get
+            {
+                if (queryCommandUndo == null)
+                    queryCommandUndo = new RelayCommand(QueryCommandUndo_Execute);
+                return queryCommandUndo;
+            }
+            set { queryCommandUndo = value; }
+        }
+
+        private void QueryCommandUndo_Execute(object obj)
+        {
+            List<TaskModel> filterTasks = tmpTaskList.AsEnumerable().Where(o => o.TaskStatus.Equals("0")).ToList();
+            TaskList = filterTasks;
+            TotalCount = filterTasks.Count;
+            PageChangedCommand_Execute(CurrentPageNumber);
+        }
+
+        private RelayCommand queryCommandDone;
+        /// <summary>
+        /// 查询已完成
+        /// </summary>
+        public RelayCommand QueryCommandDone
+        {
+            get
+            {
+                if (queryCommandDone == null)
+                    queryCommandDone = new RelayCommand(QueryCommandDone_Execute);
+                return queryCommandDone;
+            }
+            set { queryCommandDone = value; }
+        }
+
+        private void QueryCommandDone_Execute(object obj)
+        {
+            List<TaskModel> filterTasks = tmpTaskList.AsEnumerable().Where(o => o.TaskStatus.Equals("2")).ToList();
+            TaskList = filterTasks;
+            TotalCount = filterTasks.Count;
+            PageChangedCommand_Execute(CurrentPageNumber);
+        }
+
+        private RelayCommand queryCommandDoing;
+        /// <summary>
+        /// 查询未进行中
+        /// </summary>
+        public RelayCommand QueryCommandDoing
+        {
+            get
+            {
+                if (queryCommandDoing == null)
+                    queryCommandDoing = new RelayCommand(QueryCommandDoing_Execute);
+                return queryCommandDoing;
+            }
+            set { queryCommandDoing = value; }
+        }
+
+        private void QueryCommandDoing_Execute(object obj)
+        {
+            List<TaskModel> filterTasks = tmpTaskList.AsEnumerable().Where(o => o.TaskStatus.Equals("1")).ToList();
+            TaskList = filterTasks;
+            TotalCount = filterTasks.Count;
+            PageChangedCommand_Execute(CurrentPageNumber);
+        }
+
+        #endregion
+
+        #region 常规变量
         private TaskModel selectTask;
         /// <summary>
         /// 选中任务行
@@ -194,38 +388,86 @@ namespace WPFToDoList.ViewModel
             get { return taskList; }
             set { SetProperty(ref taskList, value); }
         }
+        /// <summary>
+        /// 缓存数据
+        /// </summary>
+        public List<TaskModel> tmpTaskList;
         #endregion
 
-        private ObservableCollection<Series> _seriesCollection;
-
-        public ObservableCollection<Series> SeriesCollection
-        {
-            get { return _seriesCollection; }
-            set
-            {
-                _seriesCollection = value;
-            }
-        }
+        #region 统计图表
 
         private void InitializeChart()
         {
-            // 创建数据序列示例
-            var series = new LineSeries
+            SeriesCollection = new SeriesCollection
             {
-                Title = "Sample Series"
+                 new ColumnSeries
+                 {
+                     Title = "数量",
+                     Values = new ChartValues<double>(GetChartArr())
+                 }
             };
-
-            // 添加到数据集合
-            SeriesCollection.Add(series);
+            XAxisLabels.Clear();
+            XAxisLabels.Add("未开始");
+            XAxisLabels.Add("进行中");
+            XAxisLabels.Add("已完成");
         }
+        public ObservableCollection<string> XAxisLabels { get; set; } = new ObservableCollection<string>();
 
-        public TaskService taskService = new TaskService();
-
-        public List<TaskModel> GetTaskData()
+        private double[] GetChartArr()
         {
-            return taskService.GetTaskData(Data.OptionType.onLineType);
+            int countUndo = tmpTaskList.AsEnumerable().Where(o => o.TaskStatus.Equals("0")).Count();
+            int countDoing = tmpTaskList.AsEnumerable().Where(o => o.TaskStatus.Equals("1")).Count();
+            int countDone = tmpTaskList.AsEnumerable().Where(o => o.TaskStatus.Equals("2")).Count();
+            ShowTotalMessage = string.Format("全部任务:{0}个", tmpTaskList.Count);
+            ShowTotalMessage0 = string.Format("未完成任务:{0}个", countUndo);
+            ShowTotalMessage1 = string.Format("进行中任务:{0}个", countDoing);
+            ShowTotalMessage2 = string.Format("已完成任务:{0}个", countDone);
+            return new double[] { countUndo, countDoing, countDone };
         }
 
+        private SeriesCollection seriesCollection;
+        public LiveCharts.SeriesCollection SeriesCollection
+        {
+            get { return seriesCollection; }
+            set
+            {
+                SetProperty(ref seriesCollection, value);
+            }
+        }
+
+        public Axis XAxis { get; set; }
+        public Axis YAxis { get; set; }
+
+        private string showTotalMessage;
+        public string ShowTotalMessage
+        {
+            get { return showTotalMessage; }
+            set { SetProperty(ref showTotalMessage, value); }
+        }
+
+        private string showTotalMessage0;
+        public string ShowTotalMessage0
+        {
+            get { return showTotalMessage0; }
+            set { SetProperty(ref showTotalMessage0, value); }
+        }
+
+        private string showTotalMessage1;
+        public string ShowTotalMessage1
+        {
+            get { return showTotalMessage1; }
+            set { SetProperty(ref showTotalMessage1, value); }
+        }
+
+        private string showTotalMessage2;
+        public string ShowTotalMessage2
+        {
+            get { return showTotalMessage2; }
+            set { SetProperty(ref showTotalMessage2, value); }
+        }
+        #endregion
+
+        #region 页面导航
         //需要继承INavigationAware接口，实现接口中三个方法
         //三个方法的执行顺序：
         //1.Main====>PageA
@@ -258,5 +500,7 @@ namespace WPFToDoList.ViewModel
         {
             throw new NotImplementedException();
         }
+        #endregion
+
     }
 }

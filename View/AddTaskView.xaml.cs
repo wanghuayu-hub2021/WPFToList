@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPFToDoList.ViewModel;
+using Prism.Mvvm;
+using Prism.Regions;
 
 namespace WPFToDoList.View
 {
@@ -20,10 +23,20 @@ namespace WPFToDoList.View
     /// </summary>
     public partial class AddTaskView : Window
     {
-        public AddTaskView()
+        public AddTaskView(TaskViewModel taskViewModel)
         {
             InitializeComponent();
             this.DataContext = new AddTaskViewModel();
+            this.IsEnabledChanged += delegate
+            {
+                if (!this.IsEnabled)
+                    this.Close();
+            };
+            this.Closing += delegate
+            {
+                taskViewModel.QueryCommand.Execute(this);
+            };
         }
+
     }
 }

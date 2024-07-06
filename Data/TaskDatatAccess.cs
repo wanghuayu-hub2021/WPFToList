@@ -33,7 +33,7 @@ namespace WPFToDoList.Data
             }
             else
             {
-                string queryStr = "select * from dbo.tb_task;";
+                string queryStr = "select * from dbo.tb_task order by TaskId;";
                 DataTable dt = DbAccess.ExecuteDataTable(queryStr);
                 foreach (DataRow dr in dt.Rows)
                 {
@@ -64,8 +64,8 @@ namespace WPFToDoList.Data
         public int SaveTaskData(OptionType optionType, TaskModel taskModel)
         {
             string insertSql = string.Format(
-                @"insert into dbo.tb_task(TaskDescription,TaskId,TaskStatus,TaskType,CompletionDate,EndDate,StartDate,IsRecurring,Tags)values
-                 ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}');", taskModel.TaskDescription, taskModel.TaskId, taskModel.TaskStatus,
+                @"insert into dbo.tb_task(TaskDescription,TaskStatus,TaskType,CompletionDate,EndDate,StartDate,IsRecurring,Tags)values
+                 ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}');", taskModel.TaskDescription, taskModel.TaskStatus,
                 taskModel.TaskType, taskModel.CompletionDate, taskModel.EndDate, taskModel.StartDate, taskModel.IsRecurring, taskModel.Tags
                 );
             int res = DbAccess.ExecuteDataNonQuery(insertSql);

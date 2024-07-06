@@ -25,5 +25,13 @@ namespace WPFToDoList.View
             InitializeComponent();
             this.DataContext = new TaskViewModel();
         }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (!char.IsDigit((char)e.Key) && e.Key != Key.Back)
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

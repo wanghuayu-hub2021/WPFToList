@@ -49,7 +49,6 @@ namespace WPFToDoList.ViewModel
         }
         #endregion
 
-
         #region 定时器显示时间日期
         private DispatcherTimer _timer;
 

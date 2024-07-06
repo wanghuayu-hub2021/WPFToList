@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[tb_task] (
+    [TaskDescription] VARCHAR (3000) NOT NULL,
+    [TaskId]          INT            IDENTITY (1, 1) NOT NULL,
+    [TaskStatus]      VARCHAR (4)    NULL,
+    [TaskType]        VARCHAR (4)    NULL,
+    [CompletionDate]  VARCHAR (16)   NULL,
+    [EndDate]         VARCHAR (16)   NULL,
+    [StartDate]       VARCHAR (16)   NULL,
+    [IsRecurring]     VARCHAR (4)    NULL,
+    [Tags]            NVARCHAR (50)  NULL
+);
+

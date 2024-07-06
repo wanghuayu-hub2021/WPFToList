@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WPFToDoList")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cd0628912d525765daa34fb7396e1d5a1373c732")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a586626c271568f96263606aac574087514fbfb2")]
 [assembly: System.Reflection.AssemblyProductAttribute("WPFToDoList")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WPFToDoList")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

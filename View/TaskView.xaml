@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:WPFToDoList.ViewModel"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="猫嘟清单" Height="600" Width="1000" 
-         Style="{DynamicResource MyWindowStyle}">
+        Title="猫嘟清单" Height="600" Width="1000"  IsEnabled="{Binding IsHide}"
+         Style="{DynamicResource MyWindowStyle}" >
 
     <Window.Resources>
         <local:PageNumberConverter x:Key="PageNumberConverter" />
@@ -118,7 +118,8 @@
                      Command="{Binding QueryCommandDoing}" Style="{DynamicResource MyButtonStyle}">进行中</Button>
             <Button x:Name="btnDone" Height="50" Width="100" Margin="10" 
                      Command="{Binding QueryCommandDone}" Style="{DynamicResource MyButtonStyle}">已完成</Button>
-            <Button x:Name="btnKeepAtn" Height="50" Width="100" Margin="10" Style="{DynamicResource MyButtonStyle}">专注</Button>
+            <Button x:Name="btnKeepAtn" Height="50" Width="100" Margin="10" 
+                     Command="{Binding PomoCommand}" Style="{DynamicResource MyButtonStyle}">专注</Button>
         </StackPanel>
 
         <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical" Style="{DynamicResource myWrapPanelStyle}">

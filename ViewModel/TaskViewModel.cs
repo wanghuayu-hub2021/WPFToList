@@ -32,6 +32,7 @@ namespace WPFToDoList.ViewModel
             Items = new ObservableCollection<TaskModel>(GetPageItems(TaskList, _currentPageNumber, PageSize));
             SaveCommand = new RelayCommand(SaveCommand_Execute);
             SelectTask = new TaskModel();
+            IsHide=true;
         }
 
         public TaskService taskService = new TaskService();
@@ -332,6 +333,31 @@ namespace WPFToDoList.ViewModel
             PageChangedCommand_Execute(CurrentPageNumber);
         }
 
+        private RelayCommand pomoCommand;
+        public RelayCommand PomoCommand
+        {
+            get
+            {
+                if (pomoCommand == null)
+                    pomoCommand = new RelayCommand(PomoCommand_Execute);
+                return pomoCommand;
+            }
+            set { pomoCommand = value; }
+        }
+
+        private void PomoCommand_Execute(object obj)
+        {
+            PomodoroTimerView view = new PomodoroTimerView(this);
+            if (view.ShowDialog() == true)
+            {
+                //SetVisible(true);
+            }
+        }
+
+        public void SetVisible(bool Status)
+        {
+            IsHide = Status;
+        }
         #endregion
 
         #region 常规变量
@@ -391,6 +417,17 @@ namespace WPFToDoList.ViewModel
         /// 缓存数据
         /// </summary>
         public List<TaskModel> tmpTaskList;
+
+        /// <summary>
+        /// 是否隐藏主页面
+        /// </summary>
+        public bool isHide;
+        public bool IsHide
+        {
+            get { return isHide; }
+            set { SetProperty(ref isHide, value); }
+        }
+
         #endregion
 
         #region 统计图表

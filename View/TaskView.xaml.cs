@@ -24,6 +24,7 @@ namespace WPFToDoList.View
         {
             InitializeComponent();
             this.DataContext = new TaskViewModel();
+            this.IsEnabledChanged += taskView_IsEnabledChanged;
         }
 
         private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -32,6 +33,13 @@ namespace WPFToDoList.View
             {
                 e.Handled = true;
             }
+        }
+
+        private void taskView_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.IsEnabled)
+                this.Show();
+            else this.Hide();
         }
     }
 }

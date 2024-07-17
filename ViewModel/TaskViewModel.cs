@@ -23,7 +23,7 @@ namespace WPFToDoList.ViewModel
     public class TaskViewModel : BindableBase, INavigationAware
     {
         #region 初始化
-        public TaskViewModel()
+        public TaskViewModel(IRegionManager regionManager)
         {
             CurrentUserName = "帅气的卡夫卡";
             InitializeTimer();
@@ -32,7 +32,8 @@ namespace WPFToDoList.ViewModel
             Items = new ObservableCollection<TaskModel>(GetPageItems(TaskList, _currentPageNumber, PageSize));
             SaveCommand = new RelayCommand(SaveCommand_Execute);
             SelectTask = new TaskModel();
-            IsHide=true;
+            IsHide = true;
+            _regionManage = regionManager;
         }
 
         public TaskService taskService = new TaskService();
@@ -64,7 +65,7 @@ namespace WPFToDoList.ViewModel
         private void Timer_Tick(object sender, EventArgs e)
         {
             DayOfWeek = DateTime.Now.DayOfWeek;
-            CurrentTime = DateTime.Now;
+            CurrentTime = DateTime.Now.TimeOfDay.ToString("hh\\:mm\\:ss");
         }
         #endregion
 
@@ -334,6 +335,9 @@ namespace WPFToDoList.ViewModel
         }
 
         private RelayCommand pomoCommand;
+        /// <summary>
+        /// 计时器命令
+        /// </summary>
         public RelayCommand PomoCommand
         {
             get
@@ -358,6 +362,32 @@ namespace WPFToDoList.ViewModel
         {
             IsHide = Status;
         }
+
+
+        private RelayCommand theatGameCommand;
+        /// <summary>
+        /// 多线程游戏
+        /// </summary>
+        public RelayCommand TheatGameCommand
+        {
+            get
+            {
+                if (theatGameCommand == null)
+                    theatGameCommand = new RelayCommand(TheatGameCommand_Execute);
+                return theatGameCommand;
+            }
+            set { theatGameCommand = value; }
+        }
+
+        private void TheatGameCommand_Execute(object obj)
+        {
+            RandomGameView gameView = new RandomGameView(this);
+            if (gameView.ShowDialog() == true)
+            {
+                //SetVisible(true);
+            }
+
+        }
         #endregion
 
         #region 常规变量
@@ -377,8 +407,8 @@ namespace WPFToDoList.ViewModel
         /// <summary>
         /// 当前时间
         /// </summary>
-        private DateTime currentTime;
-        public DateTime CurrentTime
+        private string currentTime;
+        public string CurrentTime
         {
             get { return currentTime; }
             set { SetProperty(ref currentTime, value); }
@@ -504,6 +534,7 @@ namespace WPFToDoList.ViewModel
         #endregion
 
         #region 页面导航
+        private readonly IRegionManager _regionManage;
         //需要继承INavigationAware接口，实现接口中三个方法
         //三个方法的执行顺序：
         //1.Main====>PageA

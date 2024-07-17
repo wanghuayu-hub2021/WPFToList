@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Regions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,8 @@ namespace WPFToDoList.View
         public TaskView()
         {
             InitializeComponent();
-            this.DataContext = new TaskViewModel();
+            IRegionManager regionManager = RegionManager.GetRegionManager(this);
+            this.DataContext = new TaskViewModel(regionManager);
             this.IsEnabledChanged += taskView_IsEnabledChanged;
         }
 

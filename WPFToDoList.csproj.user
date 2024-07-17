@@ -16,6 +16,9 @@
     <Compile Update="View\PomodoroTimerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\RandomGameView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\TaskView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -24,9 +27,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="GenericStyles.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -40,6 +40,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\PomodoroTimerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\RandomGameView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Styles\ResourceDictionary.xaml">

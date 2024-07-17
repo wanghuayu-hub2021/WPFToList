@@ -88,4 +88,10 @@
     <None Include="D:\csharpTrain\ToDoList\WPFToList\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="WPFDevelopers">
+      <HintPath>Common\WPFDevelopers.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

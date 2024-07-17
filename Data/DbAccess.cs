@@ -81,10 +81,20 @@ namespace WPFToDoList.Data
                 cmd.CommandType = CommandType.Text;                //Sql语句
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddRange(parms);
-                conn.Open();
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = cmd;
-                adapter.Fill(dt);
+                try
+                {
+                    conn.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(dt);
+                }
+                catch (SqlException ex)
+                {
+                    conn.Dispose();
+                }
+                finally
+                {
+                }
                 return dt;
             }
         }

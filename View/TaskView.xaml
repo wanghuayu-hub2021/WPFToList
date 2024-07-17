@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFToDoList.ViewModel"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:wd="https://github.com/WPFDevelopersOrg/WPFDevelopers"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="猫嘟清单" Height="600" Width="1000"  IsEnabled="{Binding IsHide}"
          Style="{DynamicResource MyWindowStyle}" >
@@ -14,7 +16,7 @@
         <Style x:Key="MyWindowStyle" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None" />
             <Setter Property="AllowsTransparency" Value="True"/>
-            <Setter Property="Background" Value="GhostWhite"/>
+            <Setter Property="Background" Value="AliceBlue"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="BorderThickness" Value="5"></Setter>
@@ -61,9 +63,10 @@
             <RowDefinition Height="250*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100*"></ColumnDefinition>
+            <ColumnDefinition Width="80*"></ColumnDefinition>
             <ColumnDefinition Width="300*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        
         <WrapPanel Grid.Row="0" Grid.Column="0" Style="{DynamicResource myWrapPanelStyle}">
             <StackPanel Orientation="Horizontal">
                 <Ellipse x:Name="tarvarPic" Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Left">
@@ -84,7 +87,7 @@
             </StackPanel>
         </WrapPanel>
         <WrapPanel Grid.Row="1" Grid.Column="0" Style="{DynamicResource myWrapPanelStyle}">
-            <Calendar VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+            <Calendar VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="AliceBlue"  Width="{Binding ActualWidth,ElementName=wpl3}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="2" Grid.Column="0" x:Name="wpl3" Style="{DynamicResource myWrapPanelStyle}">
             <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
@@ -120,6 +123,8 @@
                      Command="{Binding QueryCommandDone}" Style="{DynamicResource MyButtonStyle}">已完成</Button>
             <Button x:Name="btnKeepAtn" Height="50" Width="100" Margin="10" 
                      Command="{Binding PomoCommand}" Style="{DynamicResource MyButtonStyle}">专注</Button>
+            <Button x:Name="btnThreadGame" Height="50" Width="120" Margin="10" 
+                     Command="{Binding TheatGameCommand}" Style="{DynamicResource MyButtonStyle}" >异步游戏</Button>
         </StackPanel>
 
         <WrapPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" x:Name="wp5" Orientation="Vertical" Style="{DynamicResource myWrapPanelStyle}">

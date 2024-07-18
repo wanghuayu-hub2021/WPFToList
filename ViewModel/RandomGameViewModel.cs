@@ -3,10 +3,13 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
+using WPFDevelopers.Controls;
 using WPFToDoList.View;
 
 namespace WPFToDoList.ViewModel
@@ -54,7 +57,7 @@ namespace WPFToDoList.ViewModel
 
         private void RadioBtnGameCommand_Execute(object obj)
         {
-            SelectedValue = Convert.ToInt32(SelectedValue);
+            SelectedValue = Convert.ToInt32(obj);
         }
 
         private RelayCommand startGameCommand;
@@ -77,27 +80,54 @@ namespace WPFToDoList.ViewModel
             GameStart();
         }
 
-        private void GameStart()
+        private async void GameStart()
         {
             UpdateDoneCount("resume");
             switch (SelectedValue)
             {
-                case 0:
                 case 1:
-                case 2:
+                    Thread thread1 = new Thread(new ThreadStart(() => Add(param11, param12, "1")));
+                    Thread thread2 = new Thread(new ThreadStart(() => Add(param21, param22, "2")));
+                    Thread thread3 = new Thread(new ThreadStart(() => Add(param31, param32, "3")));
+                    Thread thread4 = new Thread(new ThreadStart(() => Add(param41, param42, "4")));
+
+                    // 启动线程
+                    thread1.Start();
+                    thread2.Start();
+                    thread3.Start();
+                    thread4.Start();
+                    // 等待所有线程完成
+                    thread1.Join();
+                    thread2.Join();
+                    thread3.Join();
+                    thread4.Join();
+                    break;
                 case 3:
-                    Task task1 = Task.Run(new Action(() => Add(param11, param12, "1")));
-                    Task task2 = Task.Run(new Action(() => Add(param21, param22, "2")));
-                    Task task3 = Task.Run(new Action(() => Add(param31, param32, "3")));
-                    Task task4 = Task.Run(new Action(() => Add(param41, param42, "4")));
-                    Task.WaitAll(task1, task2, task3, task4);
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Add2), new object[] { param11, param12, "1" });
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Add2), new object[] { param21, param22, "2" });
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Add2), new object[] { param31, param32, "3" });
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Add2), new object[] { param41, param42, "4" });
+                    break;
+                case 2:
+                    Task task31 = Task.Run(new Action(() => Add(param11, param12, "1")));
+                    Task task32 = Task.Run(new Action(() => Add(param21, param22, "2")));
+                    Task task33 = Task.Run(new Action(() => Add(param31, param32, "3")));
+                    Task task34 = Task.Run(new Action(() => Add(param41, param42, "4")));
+                    Task.WaitAll(task31, task32, task33, task34);
+                    break;
+                case 4:
+                    Task task41 = Task.Run(new Action(() => Add(param11, param12, "1")));
+                    Task task42 = Task.Run(new Action(() => Add(param21, param22, "2")));
+                    Task task43 = Task.Run(new Action(() => Add(param31, param32, "3")));
+                    Task task44 = Task.Run(new Action(() => Add(param41, param42, "4")));
+                    await Task.WhenAll(task41, task42, task43, task44);
                     break;
                 default:
                     break;
             }
         }
 
-        private double Add(double param1, double param2, string tag)
+        private void Add(double param1, double param2, string tag)
         {
             double ans = 0;
             for (int i = 0; i < 10; i++)
@@ -122,7 +152,34 @@ namespace WPFToDoList.ViewModel
                     break;
             }
             UpdateDoneCount(tag);
-            return ans;
+        }
+
+        private void Add2(object arr)
+        {
+            object[] parameters = arr as object[];
+            double ans = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                ans += (Convert.ToDouble(parameters[0]) + Convert.ToDouble(parameters[1]));
+            }
+            switch (parameters[2].ToString())
+            {
+                case "1":
+                    Answer1 = ans;
+                    break;
+                case "2":
+                    Answer2 = ans;
+                    break;
+                case "3":
+                    Answer3 = ans;
+                    break;
+                case "4":
+                    Answer4 = ans;
+                    break;
+                default:
+                    break;
+            }
+            UpdateDoneCount(parameters[2].ToString());
         }
         public static readonly object locker = new object();
 
